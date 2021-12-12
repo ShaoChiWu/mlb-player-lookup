@@ -98,7 +98,21 @@ class RDBService:
         conn.close()
 
         return res
+    
+    @classmethod
+    def get_all(cls, db_schema, table_name):
+        
+        conn = RDBService._get_db_connection()
+        cur = conn.cursor()
 
+        sql = "select * from " + db_schema + "." + table_name
+        res = cur.execute(sql)
+        res = cur.fetchall()
+
+        conn.close()
+
+        return res
+    
     @classmethod
     def create(cls, db_schema, table_name, create_data):
 

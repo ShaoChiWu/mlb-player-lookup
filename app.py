@@ -30,6 +30,18 @@ def health_check():
 def hello_world():
     return '<u>Hello World!</u>'
 
+@app.route('/api/lookup/E6156player')
+def get_all(db_schema="E6156player"):
+    
+    res = RDBService.get_all(db_schema, "mini_pitcher_stats")
+    res.extend(RDBService.get_all(db_schema, "mini_hitter_stats"))
+
+    if len(res):
+        rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
+    else:
+        rsp = Response("404 not found", status=404, content_type="application/json")
+    return rsp
+
 @app.route('/api/E6156player/<table_name>/fullName/<prefix>')
 def get_by_prefix(table_name, prefix, column_name="fullName", db_schema="E6156player"):
     if request.args.get('limit'):
