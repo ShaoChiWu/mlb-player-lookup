@@ -47,13 +47,13 @@ class RDBService:
         return res
 
     @classmethod
-    def get_by_prefix(cls, db_schema, table_name, column_name, value_prefix):
+    def get_by_prefix(cls, db_schema, table_name, column_name, value_prefix, limit, offset):
 
         conn = RDBService._get_db_connection()
         cur = conn.cursor()
 
         sql = "select * from " + db_schema + "." + table_name + " where " + \
-            column_name + " like " + "'" + value_prefix + "%'"
+            column_name + " like " + "'" + value_prefix + "%'" + " LIMIT " +  limit + " OFFSET " + offset
         print("SQL Statement = " + cur.mogrify(sql, None))
 
         res = cur.execute(sql)
@@ -64,7 +64,7 @@ class RDBService:
         return res
 
     @classmethod
-    def get_where_clause_args(cls, template):
+    def _get_where_clause_args(cls, template):
 
         terms = []
         args = []
@@ -84,7 +84,7 @@ class RDBService:
         return clause, args
 
     @classmethod
-    def find_by_template(cls, db_schema, table_name, template, field_list):
+    def find_by_template(cls, db_schema, table_name, template):
 
         wc,args = RDBService._get_where_clause_args(template)
 
